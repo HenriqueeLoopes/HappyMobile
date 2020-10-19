@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
 
 import styles from "./styles";
+import api from "../../../services/api";
 
 interface OrphanageDataRouteParams {
   latitude: number;
@@ -31,16 +32,42 @@ export default function OrphanageData() {
   const route = useRoute();
   const params = route.params as OrphanageDataRouteParams;
 
+  const navigation = useNavigation();
+
   function handleCreateOrphanage() {
-    const { latitude, longitude } = params;
-    console.log({
-      name,
-      about,
-      instructions,
-      opening_hours,
-      open_on_weekends,
-      latitude,
-      longitude,
+    const data = new FormData();
+
+    data.append('name', name);
+    data.append('about', about);
+    data.append('instructions', instructions);
+    data.append('opening_hours', opening_hours);
+    data.append('open_on_weekends', String(open_on_weekends));
+    data.append('latitude', String(params.latitude));
+    data.append('longitude', String(params.longitude));
+
+    images.forEach((image, index) => {
+      data.append('images', {
+        name: `image_${index}.jpg`,
+        type: 'image/jpg',
+        uri: image,
+      } as any);
+    });
+
+    api.post('/orphanages', data).then(response => {
+      navigation.navigate('OrphanagesMap');
+    }).catch(error => {
+      if (error.response) {
+        // Request made and server responded
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
     });
   }
 
@@ -95,12 +122,11 @@ export default function OrphanageData() {
       <View style={styles.uploadedImagesContainer}>
         {images.map((image) => {
           return (
-            <View style={styles.imageContainer}>
+            <View key={image} style={styles.imageContainer}>
               <TouchableOpacity style={styles.uploadedImageRemove}>
                 <Text><Feather name="trash" size={14} color="#ff669d" /></Text>
               </TouchableOpacity>
               <Image
-                key={image}
                 source={{ uri: image }}
                 style={styles.uploadedImage}
               />
