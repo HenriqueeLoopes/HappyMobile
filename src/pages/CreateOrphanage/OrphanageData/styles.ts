@@ -38,6 +38,36 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
 
+  uploadedImagesContainer: {
+    flexDirection: 'row',
+  },
+  uploadedImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    marginBottom: 32,
+    marginRight: 8,
+    zIndex: 9,
+  },
+
+  imageContainer: {
+    justifyContent: "flex-end",
+    alignItems: 'flex-end',
+  },
+
+  uploadedImageRemove: {
+    backgroundColor: '#FFF',
+    marginBottom: -19,
+    marginRight: 8,
+    zIndex: 10,
+    borderBottomLeftRadius: 20,
+    borderTopRightRadius: 20,
+    height: 20,
+    width: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   imagesInput: {
     backgroundColor: "rgba(255, 255, 255, 0.5)",
     borderStyle: "dashed",

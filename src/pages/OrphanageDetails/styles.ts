@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: Dimensions.get('window').width,
+    width: Dimensions.get("window").width,
     height: 240,
     resizeMode: "cover",
   },
@@ -89,6 +89,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 
+  scheduleItemRed: {
+    backgroundColor: "#fef6f9",
+    borderWidth: 1,
+    borderColor: "#ffbcd4",
+    borderRadius: 20,
+  },
+
   scheduleText: {
     fontFamily: "Nunito_600SemiBold",
     fontSize: 16,
@@ -102,6 +109,10 @@ const styles = StyleSheet.create({
 
   scheduleTextGreen: {
     color: "#37C77F",
+  },
+
+  scheduleTextRed: {
+    color: "#ff669d",
   },
 
   contactButton: {

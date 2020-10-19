@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Image, View, ScrollView, Text } from "react-native";
+import { Image, View, ScrollView, Text, Linking } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Feather, FontAwesome } from "@expo/vector-icons";
-import { RectButton } from "react-native-gesture-handler";
+import { RectButton, TouchableOpacity } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 
 import mapMarkerImg from "../../images/map-marker.png";
@@ -40,6 +40,12 @@ export default function OrphanageDetails() {
     });
   }, [params.id]);
 
+  function handleOpenGoogleMapsRoutes() {
+    Linking.openURL(
+      `https://www.google.com.br/maps/dir/?api=1&destination=${orphanage?.latitude},${orphanage?.longitude}`
+    );
+  }
+
   if (!orphanage) {
     return (
       <View style={styles.container}>
@@ -54,7 +60,8 @@ export default function OrphanageDetails() {
         <ScrollView horizontal pagingEnabled>
           {orphanage.images.map((image) => {
             return (
-              <Image key={image.id}
+              <Image
+                key={image.id}
                 style={styles.image}
                 source={{
                   uri: image.url,
@@ -92,9 +99,12 @@ export default function OrphanageDetails() {
             />
           </MapView>
 
-          <View style={styles.routesContainer}>
+          <TouchableOpacity
+            style={styles.routesContainer}
+            onPress={handleOpenGoogleMapsRoutes}
+          >
             <Text style={styles.routesText}>Ver rotas no Google Maps</Text>
-          </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.separator} />
@@ -109,12 +119,22 @@ export default function OrphanageDetails() {
               {orphanage.opening_hours}
             </Text>
           </View>
-          <View style={[styles.scheduleItem, styles.scheduleItemGreen]}>
-            <Feather name="info" size={40} color="#39CC83" />
-            <Text style={[styles.scheduleText, styles.scheduleTextGreen]}>
-              Atendemos fim de semana
-            </Text>
-          </View>
+
+          {orphanage.open_on_weekends ? (
+            <View style={[styles.scheduleItem, styles.scheduleItemGreen]}>
+              <Feather name="info" size={40} color="#39CC83" />
+              <Text style={[styles.scheduleText, styles.scheduleTextGreen]}>
+                Atendemos fim de semana
+              </Text>
+            </View>
+          ) : (
+            <View style={[styles.scheduleItem, styles.scheduleItemRed]}>
+              <Feather name="info" size={40} color="#ff669d" />
+              <Text style={[styles.scheduleText, styles.scheduleTextRed]}>
+                Nao atendemos fim de semana
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* <RectButton style={styles.contactButton} onPress={() => {}}>
